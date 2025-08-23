@@ -1,0 +1,67 @@
+name: Continuous publish
+on:
+  push:
+    branches:
+      - "master"
+    paths:
+      - "src/**/*.kt"
+      - "build.gradle.kts"
+      - "settings.gradle.kts"
+      - "gradle.properties"
+      - "!.gitignore"
+      - "!README.md"
+      - "!README"
+      - "!LICENSE"
+  workflow_dispatch:
+
+
+defaults:
+  run:
+    shell: bash
+
+
+permissions:
+  contents: read
+  checks: write
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Java
+        uses: actions/setup-java@v4
+        with:
+          java-version: 17
+          distribution: temurin
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Build
+        run: ./gradlew build
+
+      - name: Write test report
+        uses: mikepenz/action-junit-report@v5
+        if: ${{ success() || failure() }}
+        with:
+          report_paths: './build/test-results/test/TEST-*.xml'
+          include_passed: true
+          detailed_summary: true
+          fail_on_failure: true
+          require_tests: true
+          check_name: Test Report (Ref ${{ github.ref }})
+          check_title_template: '{{SUITE_NAME}} | {{TEST_NAME}}'
+
+      - name: Publish package
+        run: ./gradlew publish
+        if: ${{ (github.ref_name == 'master' && github.event_name == 'push') || github.event_name == 'workflow_dispatch' }}
+        env:
+          COLOSSEUM_MAVEN_URL: ${{ secrets.COLOSSEUM_MAVEN }}
+          COLOSSEUM_MAVEN_USERNAME: ${{ secrets.COLOSSEUM_MAVEN_USERNAME }}
+          COLOSSEUM_MAVEN_PASSWORD: ${{ secrets.COLOSSEUM_MAVEN_PASSWORD }}
