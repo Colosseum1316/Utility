@@ -54,17 +54,17 @@ object UtilPlayerBase {
     fun searchOnline(caller: Player, target: String, inform: Boolean): Player? {
         val matchList = ArrayList<Player>()
 
-        for (cur in Bukkit.getOnlinePlayers()) {
-            if (cur.name.equals(target, ignoreCase = true)) {
-                return cur
+        for (player in Bukkit.getOnlinePlayers()) {
+            if (player.name.equals(target, ignoreCase = true)) {
+                return player
             }
 
-            if (cur.name.lowercase(Locale.getDefault()).contains(target.lowercase(Locale.getDefault()))) {
-                matchList.add(cur)
+            if (player.name.lowercase(Locale.getDefault()).contains(target.lowercase(Locale.getDefault()))) {
+                matchList.add(player)
             }
         }
 
-        // No / Non-Unique
+        // No match or more than one
         if (matchList.size != 1) {
             if (!inform) {
                 return null

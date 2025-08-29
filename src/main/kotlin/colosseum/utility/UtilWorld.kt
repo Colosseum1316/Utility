@@ -30,11 +30,6 @@ object UtilWorld {
     }
 
     @JvmStatic
-    fun getWorlds(): List<World> {
-        return Bukkit.getServer().worlds
-    }
-
-    @JvmStatic
     fun isInChunk(location: Location, chunk: Chunk): Boolean {
         return location.chunk.x == chunk.x && location.chunk.z == chunk.z && chunk.world == location.chunk.world
     }
@@ -45,71 +40,13 @@ object UtilWorld {
     }
 
     @JvmStatic
-    fun chunkToStr(chunk: Chunk?): String {
-        return if (chunk == null) "" else chunkToStr(chunk.world.name, chunk.x, chunk.z)
-    }
-
-    @JvmStatic
-    fun chunkToStr(location: Location): String {
-        return chunkToStr(location.world.name, location.blockX shr 4, location.blockZ shr 4)
-    }
-
-    @JvmStatic
-    fun chunkToStr(world: String, x: Int, z: Int): String {
-        return "$world,$x,$z"
-    }
-
-    @JvmStatic
     fun chunkToStrClean(chunk: Chunk?): String {
         return if (chunk == null) "" else "(${chunk.x},${chunk.z})"
     }
 
     @JvmStatic
-    fun strToChunk(string: String): Chunk? {
-        try {
-            val tokens = string.split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-            return getWorld(tokens[0]).getChunkAt(tokens[1].toInt(), tokens[2].toInt())
-        } catch (e: Exception) {
-            return null
-        }
-    }
-
-    @JvmStatic
-    fun blockToStr(block: Block?): String {
-        return if (block == null) "" else "${block.world.name},${block.x},${block.y},${block.z}"
-    }
-
-    @JvmStatic
     fun blockToStrClean(block: Block?): String {
         return if (block == null) "" else "(${block.x},${block.y},${block.z})"
-    }
-
-    @JvmStatic
-    fun strToBlock(string: String): Block? {
-        if (string.isEmpty()) {
-            return null
-        }
-
-        val parts = string.split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-
-        try {
-            for (cur in Bukkit.getServer().worlds) {
-                if (cur.name.equals(parts[0], ignoreCase = true)) {
-                    val x = parts[1].toInt()
-                    val y = parts[2].toInt()
-                    val z = parts[3].toInt()
-                    return cur.getBlockAt(x, y, z)
-                }
-            }
-        } catch (e: Exception) {
-            // NO-OP
-        }
-        return null
-    }
-
-    @JvmStatic
-    fun locToStr(loc: Location?): String {
-        return if (loc == null) "" else "${loc.world.name},${trim(1, loc.x)},${trim(1, loc.y)},${trim(1, loc.z)}"
     }
 
     @JvmStatic
@@ -120,26 +57,6 @@ object UtilWorld {
     @JvmStatic
     fun vecToStrClean(loc: Vector?): String {
         return if (loc == null) "Null" else "(${loc.x},${loc.y},${loc.z})"
-    }
-
-    @JvmStatic
-    fun strToLoc(string: String): Location? {
-        if (string.isEmpty()) {
-            return null
-        }
-
-        val tokens = string.split(",".toRegex()).dropLastWhile { it.isEmpty() }.toTypedArray()
-
-        try {
-            for (cur in Bukkit.getServer().worlds) {
-                if (cur.name.equals(tokens[0], ignoreCase = true)) {
-                    return Location(cur, tokens[1].toDouble(), tokens[2].toDouble(), tokens[3].toDouble())
-                }
-            }
-        } catch (e: Exception) {
-            return null
-        }
-        return null
     }
 
     @JvmStatic
@@ -158,16 +75,6 @@ object UtilWorld {
             World.Environment.THE_END -> "The End"
             else -> "Unknown"
         }
-    }
-
-    @JvmStatic
-    fun getWorldType(env: World.Environment): World? {
-        for (cur in Bukkit.getServer().worlds) {
-            if (cur.environment == env) {
-                return cur
-            }
-        }
-        return null
     }
 
     @JvmStatic
