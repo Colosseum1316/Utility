@@ -1,6 +1,5 @@
 package colosseum.utility
 
-import colosseum.utility.UtilMath.trim
 import com.google.common.collect.Lists
 import kotlin.math.max
 import kotlin.math.min
@@ -39,24 +38,44 @@ object UtilWorld {
         return (first.blockX shr 4) == (second.blockX shr 4) && (first.blockZ shr 4) == (second.blockZ shr 4)
     }
 
+    /**
+     * @param chunk [Chunk] object
+     *
+     * @return "x,z", or empty string if chunk is null.
+     */
     @JvmStatic
     fun chunkToStrClean(chunk: Chunk?): String {
-        return if (chunk == null) "" else "(${chunk.x},${chunk.z})"
+        return if (chunk == null) "" else "${chunk.x},${chunk.z}"
     }
 
+    /**
+     * @param block [Block] object
+     *
+     * @return "x,y,z", or empty string if block is null.
+     */
     @JvmStatic
     fun blockToStrClean(block: Block?): String {
-        return if (block == null) "" else "(${block.x},${block.y},${block.z})"
+        return if (block == null) "" else "${block.x},${block.y},${block.z}"
     }
 
+    /**
+     * @param loc [Location] object
+     *
+     * @return "blockX,blockY,blockZ", or "Null" if loc is null.
+     */
     @JvmStatic
     fun locToStrClean(loc: Location?): String {
-        return if (loc == null) "Null" else "(${loc.blockX},${loc.blockY},${loc.blockZ})"
+        return if (loc == null) "Null" else "${loc.blockX},${loc.blockY},${loc.blockZ}"
     }
 
+    /**
+     * @param loc [Vector] object
+     *
+     * @return "x,y,z", or "Null" if loc is null.
+     */
     @JvmStatic
     fun vecToStrClean(loc: Vector?): String {
-        return if (loc == null) "Null" else "(${loc.x},${loc.y},${loc.z})"
+        return if (loc == null) "Null" else "${loc.x},${loc.y},${loc.z}"
     }
 
     @JvmStatic
@@ -124,9 +143,9 @@ object UtilWorld {
     var getBorderMinZ: Function<WorldBorder, Double> = (Function { border: WorldBorder -> -getBorderSize.apply(border) })
 
     /**
-     * This method will use the World provided by the given Location.
+     * This method uses the world specified by [Location].
      *
-     *
+     * @param location [Location] object
      *
      * @return **true** if the specified location is within the bounds of the
      * world's set border, or **false** if [World.getWorldBorder] returns null.
@@ -137,10 +156,10 @@ object UtilWorld {
     }
 
     /**
-     * This method will use the World specified by the second argument, and the
-     * x, y, and z provided by the given Location.
+     * This method uses the world specified by [Location].
      *
-     *
+     * @param world [World] object
+     * @param location [Location] object
      *
      * @return **true** if the specified location is within the bounds of the
      * world's set border, or **false** if [World.getWorldBorder] returns null.

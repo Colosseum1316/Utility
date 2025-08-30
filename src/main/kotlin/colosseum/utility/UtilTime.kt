@@ -1,41 +1,44 @@
 package colosseum.utility
 
-import kotlin.math.max
-import java.sql.Timestamp
-import java.text.SimpleDateFormat
+import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
-import java.util.*
+import java.time.format.DateTimeFormatter
+import java.util.function.*
 
 object UtilTime {
-    val CENTRAL_ZONE: ZoneId = ZoneId.of("UTC")
-    const val DATE_FORMAT_NOW: String = "MM-dd-yyyy HH:mm:ss"
-    const val DATE_FORMAT_DAY: String = "MM-dd-yyyy"
-
-    @JvmStatic
-    fun now(): String {
-        val cal = Calendar.getInstance()
-        val sdf = SimpleDateFormat(DATE_FORMAT_NOW)
-        return sdf.format(cal.time)
+    private val DATE_FORMAT_NOW = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss")
+    private val DATE_FORMAT_DAY = DateTimeFormatter.ofPattern("MM-dd-yyyy")
+    val NOW_MILLIS = Supplier {
+        System.currentTimeMillis()
     }
 
     @JvmStatic
+    fun now(): String {
+        return LocalDateTime.now().format(DATE_FORMAT_NOW)
+    }
+
+    /**
+     * @param time Unix timestamp in milli seconds.
+     * @return Formatted datetime in local timezone.
+     */
+    @JvmStatic
     fun `when`(time: Long): String {
-        val sdf = SimpleDateFormat(DATE_FORMAT_NOW)
-        return sdf.format(time)
+        return LocalDateTime.ofInstant(Instant.ofEpochMilli(time), ZoneId.systemDefault()).format(DATE_FORMAT_NOW)
     }
 
     @JvmStatic
     fun date(): String {
-        val cal = Calendar.getInstance()
-        val sdf = SimpleDateFormat(DATE_FORMAT_DAY)
-        return sdf.format(cal.time)
+        return LocalDateTime.now().format(DATE_FORMAT_DAY)
     }
 
+    /**
+     * @param date Unix timestamp in milli seconds.
+     * @return Formatted date in local timezone.
+     */
     @JvmStatic
     fun date(date: Long): String {
-        val sdf = SimpleDateFormat(DATE_FORMAT_DAY)
-        return sdf.format(date)
+        return LocalDateTime.ofInstant(Instant.ofEpochMilli(date), ZoneId.systemDefault()).format(DATE_FORMAT_DAY)
     }
 
     @JvmStatic
@@ -51,81 +54,22 @@ object UtilTime {
         }
     }
 
-    /**
-     * Converts a [Timestamp] to a [LocalDateTime].
-     * This method will only work for timestamp's stored using [CENTRAL_ZONE]
-     *
-     * @param timestamp the timestamp to convert
-     * @return the time
-     *
-     * @see [fromTimestamp]
-     */
-    @JvmStatic
-    fun fromTimestamp(timestamp: Timestamp): LocalDateTime {
-        return fromTimestamp(timestamp, CENTRAL_ZONE)
-    }
-
-    /**
-     * Converts a [Timestamp] to a [LocalDateTime].
-     * The zone supplied should be that of which the timezone was stored using.
-     *
-     * @param timestamp the timestamp to convert
-     * @param zoneId    the zone of the timestamp
-     * @return the time
-     *
-     * @see [fromTimestamp]
-     */
-    @JvmStatic
-    fun fromTimestamp(timestamp: Timestamp, zoneId: ZoneId): LocalDateTime {
-        return LocalDateTime.ofInstant(timestamp.toInstant(), zoneId)
-    }
-
-    /**
-     * Converts a [LocalDateTime] to a [Timestamp].
-     * Please note that this will convert using the [CENTRAL_ZONE] timezone.
-     *
-     * @param localDateTime the time to convert
-     * @return the timestamp
-     *
-     * @see [toTimestamp]
-     */
-    @JvmStatic
-    fun toTimestamp(localDateTime: LocalDateTime): Timestamp {
-        return toTimestamp(localDateTime, CENTRAL_ZONE)
-    }
-
-    /**
-     * Converts a [LocalDateTime] to a [Timestamp].
-     *
-     * @param localDateTime the time to convert
-     * @param zoneId        the zone to use when converting to a timestamp
-     * @return the timestamp
-     *
-     * @see [toTimestamp]
-     */
-    @JvmStatic
-    fun toTimestamp(localDateTime: LocalDateTime, zoneId: ZoneId): Timestamp {
-        return Timestamp(localDateTime.atZone(zoneId).toInstant().toEpochMilli())
-    }
-
-    /**
-     * Convert from one TimeUnit to a different one
-     */
-    @JvmStatic
-    fun convert(time: Long, from: TimeUnit, to: TimeUnit): Long {
-        val milleseconds = time * from.milliseconds
-        return milleseconds / to.milliseconds
-    }
-
     @JvmStatic
     fun since(epoch: Long): String {
-        return "Took ${convertString(System.currentTimeMillis() - epoch, 1, TimeUnit.FIT)}."
+        return since(NOW_MILLIS, epoch);
+    }
+
+    @JvmStatic
+    fun since(base: Supplier<Long>, epoch: Long): String {
+        return "Took ${convertString(base.get() - epoch, 1, TimeUnit.FIT)}."
     }
 
     private fun convert0(time: Long, timeUnit: TimeUnit): TimeUnit {
         var type = timeUnit
         if (type == TimeUnit.FIT) {
-            type = if (time < 60000) {
+            type = if (time < 1000) {
+                TimeUnit.MILLISECONDS
+            } else if (time < 60000) {
                 TimeUnit.SECONDS
             } else if (time < 3600000) {
                 TimeUnit.MINUTES
@@ -142,22 +86,26 @@ object UtilTime {
     fun convert(time: Long, trim: Int, timeUnit: TimeUnit): Double {
         val type = convert0(time, timeUnit)
         return when (type) {
-            TimeUnit.DAYS -> UtilMath.trim(trim, (time) / 86400000.0)
-            TimeUnit.HOURS -> UtilMath.trim(trim, (time) / 3600000.0)
-            TimeUnit.MINUTES -> UtilMath.trim(trim, (time) / 60000.0)
-            TimeUnit.SECONDS -> UtilMath.trim(trim, (time) / 1000.0)
+            TimeUnit.DAYS -> UtilMath.trim(trim, time / 86400000.0)
+            TimeUnit.HOURS -> UtilMath.trim(trim, time / 3600000.0)
+            TimeUnit.MINUTES -> UtilMath.trim(trim, time / 60000.0)
+            TimeUnit.SECONDS -> UtilMath.trim(trim, time / 1000.0)
             else -> UtilMath.trim(trim, time.toDouble())
         }
+    }
+
+    /**
+     * Convert from one TimeUnit to a different one
+     */
+    @JvmStatic
+    fun convert(time: Long, from: TimeUnit, to: TimeUnit): Long {
+        val milleseconds = time * from.milliseconds
+        return milleseconds / to.milliseconds
     }
 
     @JvmStatic
     fun makeStr(time: Long): String {
         return convertString(time, 1, TimeUnit.FIT)
-    }
-
-    @JvmStatic
-    fun makeStr(time: Long, trim: Int): String {
-        return convertString(max(0.0, time.toDouble()).toLong(), trim, TimeUnit.FIT)
     }
 
     @JvmStatic
@@ -214,7 +162,7 @@ object UtilTime {
                 TimeUnit.HOURS -> "${UtilMath.trim(trim, time / 3600000.0).also { num = it }} hour"
                 TimeUnit.MINUTES -> "${UtilMath.trim(trim, time / 60000.0).toInt().also { num = it.toDouble() }.toInt()} minute"
                 TimeUnit.SECONDS -> "${UtilMath.trim(trim, time / 1000.0).toInt().also { num = it.toDouble() }.toInt()} second"
-                else -> "${UtilMath.trim(trim, time.toDouble()).toInt().also { num = it.toDouble() }.toInt()} millisecond"
+                else -> "${UtilMath.trim(0, time.toDouble()).toInt().also { num = it.toDouble() }.toInt()} millisecond"
             }
         } else {
             text = when (type) {
@@ -238,7 +186,7 @@ object UtilTime {
     }
 
     enum class TimeUnit(val milliseconds: Long) {
-        FIT(1),
+        FIT(0),
         DAYS(86400000),
         HOURS(3600000),
         MINUTES(60000),
@@ -246,6 +194,7 @@ object UtilTime {
         MILLISECONDS(1);
 
         companion object {
+            @JvmStatic
             fun decreasingOrder(): Array<TimeUnit> {
                 return arrayOf(DAYS, HOURS, MINUTES, SECONDS, MILLISECONDS)
             }
