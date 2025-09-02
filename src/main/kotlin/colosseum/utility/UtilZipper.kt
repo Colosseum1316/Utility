@@ -6,64 +6,35 @@ import java.io.File
 import java.io.FileInputStream
 import java.io.FileOutputStream
 import java.io.IOException
+import java.nio.file.FileSystems
+import java.nio.file.Files
+import java.nio.file.Path
 import java.util.logging.*
 import java.util.zip.*
 
 object UtilZipper {
-    @JvmStatic
-    fun getFileList(fileList: MutableList<File>, node: File) {
-        // add file only
-        if (node.isFile) {
-            fileList.add(node)
-        } else if (node.isDirectory) {
-            val subNote = node.list()
-            if (subNote != null) {
-                for (filename in subNote) {
-                    getFileList(fileList, File(node, filename))
-                }
-            }
-        }
-    }
 
     /**
-     * @param sourceFolder The folder that has everything to be zipped.
+     * @param sourceDir The folder that has everything to be zipped.
      * @param outputZipFile Zip file output.
-     * @param subFolders Subdirectories relative to [sourceFolder]. Direct descendant.
-     * @param individualFiles Individual files that are right in [sourceFolder]
      *
      * @throws IOException If any IO error occurs during zipping.
      */
     @JvmStatic
     @Throws(IOException::class)
-    fun zip(sourceFolder: File, outputZipFile: File, subFolders: List<File>, individualFiles: List<File>) {
-        val fileList: MutableList<File> = ArrayList()
-        val buffer = ByteArray(2048)
-
-        FileOutputStream(outputZipFile).use { fileOutputStream ->
-            BufferedOutputStream(fileOutputStream).use { bufferedOutputStream ->
-                ZipOutputStream(bufferedOutputStream).use { zipOutputStream ->
-                    var entry: ZipEntry
-
-                    for (file in individualFiles) {
-                        fileList.add(file)
-                    }
-
-                    for (folder in subFolders) {
-                        getFileList(fileList, folder)
-                    }
-
-                    for (f in fileList) {
-                        entry = ZipEntry(f.name)
-                        zipOutputStream.putNextEntry(entry)
-
-                        FileInputStream(sourceFolder.resolve(f)).use { fileInputStream ->
-                            var len: Int
-                            while ((fileInputStream.read(buffer).also { len = it }) > 0) {
-                                zipOutputStream.write(buffer, 0, len)
-                            }
-                        }
-                    }
+    fun zip(sourceDir: File, outputZipFile: File) {
+        val sourcePath = sourceDir.toPath()
+        val outputPath = outputZipFile.toPath()
+        ZipOutputStream(Files.newOutputStream(outputPath)).use { zos ->
+            Files.walk(sourcePath).forEach { path ->
+                if (Files.isDirectory(path)) {
+                    return@forEach
                 }
+                val relativePath: Path = sourcePath.relativize(path)
+                val zipEntry = ZipEntry(relativePath.toString().replace(FileSystems.getDefault().separator, "/"))
+                zos.putNextEntry(zipEntry)
+                Files.copy(path, zos)
+                zos.closeEntry()
             }
         }
     }

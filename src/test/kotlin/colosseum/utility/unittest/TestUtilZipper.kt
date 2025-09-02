@@ -53,10 +53,7 @@ internal class TestUtilZipper {
     @Test
     fun testZipper() {
         Assertions.assertDoesNotThrow {
-            UtilZipper.zip(tempInputDir,
-                tempOutputDir.resolve("output.zip"),
-                listOf(mockDescendantDir1, mockDescendantDir2),
-                listOf(mockDirectTxt1, mockDirectTxt2))
+            UtilZipper.zip(tempInputDir, tempOutputDir.resolve("output.zip"))
             UtilZipper.unzip(tempOutputDir.resolve("output.zip"), tempOutputDir)
         }
 
