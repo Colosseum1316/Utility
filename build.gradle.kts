@@ -34,7 +34,8 @@ repositories {
 
 dependencies {
     compileOnly("colosseum.minecraft:colosseumspigot-api:1.8.8-R0.1-SNAPSHOT")
-    implementation("colosseum.minecraft:colosseumspigot-api:1.8.8-R0.1-SNAPSHOT")
+
+    testImplementation("colosseum.minecraft:colosseumspigot-api:1.8.8-R0.1-SNAPSHOT")
     testImplementation("org.junit.jupiter:junit-jupiter-api:${rootProject.findProperty("junit_version")}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${rootProject.findProperty("junit_version")}")
     testImplementation("com.github.MockBukkit:MockBukkit:v1.8-spigot-SNAPSHOT") {
