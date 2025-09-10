@@ -2,6 +2,7 @@ plugins {
     id("org.jetbrains.kotlin.jvm") version "2.1.20"
     id("org.jetbrains.dokka") version "1.8.10"
     `maven-publish`
+    jacoco
 }
 
 group = "colosseum.minecraft"
@@ -53,6 +54,27 @@ tasks.named<Jar>("javadocJar") {
 
 tasks.test {
     useJUnitPlatform()
+    outputs.upToDateWhen { false }
+    reports {
+        html.required = false
+        junitXml.required = true
+        junitXml.isOutputPerTestCase = true
+    }
+    finalizedBy(tasks.jacocoTestReport)
+}
+
+tasks.jacocoTestReport {
+    reports {
+        xml.required = true
+        html.required = true
+    }
+    classDirectories.setFrom(
+        files(classDirectories.files.map {
+            fileTree(it) {
+                include("colosseum/utility/**")
+            }
+        })
+    )
 }
 
 publishing {
