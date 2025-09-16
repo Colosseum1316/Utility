@@ -1,14 +1,12 @@
 package colosseum.utility
 
-import java.io.BufferedInputStream
-import java.io.BufferedOutputStream
 import java.io.File
-import java.io.FileInputStream
-import java.io.FileOutputStream
 import java.io.IOException
+import java.io.InputStream
 import java.nio.file.FileSystems
 import java.nio.file.Files
 import java.nio.file.Path
+import java.nio.file.StandardCopyOption
 import java.util.logging.*
 import java.util.zip.*
 
@@ -23,8 +21,8 @@ object UtilZipper {
     @JvmStatic
     @Throws(IOException::class)
     fun zip(sourceDir: File, outputZipFile: File) {
-        val sourcePath = sourceDir.toPath()
-        val outputPath = outputZipFile.toPath()
+        val sourcePath = sourceDir.toPath().toAbsolutePath()
+        val outputPath = outputZipFile.toPath().toAbsolutePath()
         ZipOutputStream(Files.newOutputStream(outputPath)).use { zos ->
             Files.walk(sourcePath).forEach { path ->
                 if (Files.isDirectory(path)) {
@@ -48,31 +46,41 @@ object UtilZipper {
     @JvmStatic
     @Throws(IOException::class)
     fun unzip(zipFile: File, outputDirectory: File) {
-        FileInputStream(zipFile).use { fileInputStream ->
-            BufferedInputStream(fileInputStream).use { bufferedInputStream ->
-                ZipInputStream(bufferedInputStream).use { zipInputStream ->
-                    var entry: ZipEntry?
+        Files.newInputStream(zipFile.toPath()).use { stream ->
+            unzip(stream, outputDirectory)
+        }
+    }
 
-                    while ((zipInputStream.nextEntry.also { entry = it }) != null) {
-                        var size: Int
-                        val buffer = ByteArray(2048)
+    @JvmStatic
+    @Throws(IOException::class)
+    fun unzip(inputStream: InputStream, outputDirectory: File) {
+        inputStream.buffered().use { b ->
+            unzip(ZipInputStream(b), outputDirectory)
+        }
+    }
 
-                        val file = outputDirectory.resolve(entry!!.name)
+    @JvmStatic
+    @Throws(IOException::class)
+    fun unzip(zipInputStream: ZipInputStream, outputDirectory: File) {
+        val targetPath = outputDirectory.toPath().toAbsolutePath()
+        zipInputStream.use { zis ->
+            var entry = zis.nextEntry
+            while (entry != null) {
+                val newPath = targetPath.resolve(entry.name).normalize().toAbsolutePath()
 
-                        if (file.isDirectory && !file.exists()) {
-                            file.mkdirs()
-                            continue
-                        }
-
-                        FileOutputStream(file).use { fileOutputStream ->
-                            BufferedOutputStream(fileOutputStream, buffer.size).use { bufferedOutputStream ->
-                                while ((zipInputStream.read(buffer, 0, buffer.size).also { size = it }) != -1) {
-                                    bufferedOutputStream.write(buffer, 0, size)
-                                }
-                            }
-                        }
-                    }
+                if (!newPath.startsWith(targetPath)) {
+                    throw IOException("Bad zip entry: ${entry.name}")
                 }
+
+                if (entry.isDirectory) {
+                    Files.createDirectories(newPath)
+                } else {
+                    Files.createDirectories(newPath.parent)
+                    Files.copy(zis, newPath, StandardCopyOption.REPLACE_EXISTING)
+                }
+
+                zis.closeEntry()
+                entry = zis.nextEntry
             }
         }
     }
