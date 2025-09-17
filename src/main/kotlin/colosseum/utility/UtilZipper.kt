@@ -2,6 +2,7 @@ package colosseum.utility
 
 import java.io.File
 import java.io.IOException
+import java.io.InputStream
 import java.nio.file.FileSystems
 import java.nio.file.Files
 import java.nio.file.Path
@@ -45,8 +46,24 @@ object UtilZipper {
     @JvmStatic
     @Throws(IOException::class)
     fun unzip(zipFile: File, outputDirectory: File) {
+        Files.newInputStream(zipFile.toPath()).use { stream ->
+            unzip(stream, outputDirectory)
+        }
+    }
+
+    @JvmStatic
+    @Throws(IOException::class)
+    fun unzip(inputStream: InputStream, outputDirectory: File) {
+        inputStream.buffered().use { b ->
+            unzip(ZipInputStream(b), outputDirectory)
+        }
+    }
+
+    @JvmStatic
+    @Throws(IOException::class)
+    fun unzip(zipInputStream: ZipInputStream, outputDirectory: File) {
         val targetPath = outputDirectory.toPath()
-        ZipInputStream(Files.newInputStream(zipFile.toPath())).use { zis ->
+        zipInputStream.use { zis ->
             var entry = zis.nextEntry
             while (entry != null) {
                 val newPath = targetPath.resolve(entry.name).normalize()
