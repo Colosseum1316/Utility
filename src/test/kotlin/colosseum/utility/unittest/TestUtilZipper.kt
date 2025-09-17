@@ -90,4 +90,18 @@ internal class TestUtilZipper {
         Assertions.assertFalse(tempOutputDir.resolve("mockDescendantDir2").resolve("mockDescendantTxt2.txt").isDirectory)
         Assertions.assertTrue(tempOutputDir.resolve("mockDescendantDir2").resolve("mockDescendantTxt2.txt").readText() == "mockDescendantTxt2.txt")
     }
+
+    @Test
+    fun testExistingArchive() {
+        val outputDir = tempOutputDir.resolve("existing_archive")
+        Assertions.assertDoesNotThrow {
+            UtilZipper.unzip(this.javaClass.classLoader.getResourceAsStream("test1.zip"), outputDir)
+        }
+        val levelDat = outputDir.resolve("level.dat")
+        val region = outputDir.resolve("region")
+        Assertions.assertTrue(levelDat.exists())
+        Assertions.assertTrue(levelDat.isFile)
+        Assertions.assertTrue(region.exists())
+        Assertions.assertTrue(region.isDirectory)
+    }
 }

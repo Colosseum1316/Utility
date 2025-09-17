@@ -62,14 +62,14 @@ object UtilZipper {
     @JvmStatic
     @Throws(IOException::class)
     fun unzip(zipInputStream: ZipInputStream, outputDirectory: File) {
-        val targetPath = outputDirectory.toPath().toAbsolutePath()
+        val targetPath = outputDirectory.toPath().normalize().toAbsolutePath()
         zipInputStream.use { zis ->
             var entry = zis.nextEntry
             while (entry != null) {
                 val newPath = targetPath.resolve(entry.name).normalize().toAbsolutePath()
 
                 if (!newPath.startsWith(targetPath)) {
-                    throw IOException("Bad zip entry: ${entry.name}")
+                    throw IOException("Bad zip entry: ${entry.name} ({$newPath}) ($targetPath)")
                 }
 
                 if (entry.isDirectory) {
