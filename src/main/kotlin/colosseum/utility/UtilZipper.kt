@@ -21,8 +21,8 @@ object UtilZipper {
     @JvmStatic
     @Throws(IOException::class)
     fun zip(sourceDir: File, outputZipFile: File) {
-        val sourcePath = sourceDir.toPath()
-        val outputPath = outputZipFile.toPath()
+        val sourcePath = sourceDir.toPath().toAbsolutePath()
+        val outputPath = outputZipFile.toPath().toAbsolutePath()
         ZipOutputStream(Files.newOutputStream(outputPath)).use { zos ->
             Files.walk(sourcePath).forEach { path ->
                 if (Files.isDirectory(path)) {
@@ -62,11 +62,11 @@ object UtilZipper {
     @JvmStatic
     @Throws(IOException::class)
     fun unzip(zipInputStream: ZipInputStream, outputDirectory: File) {
-        val targetPath = outputDirectory.toPath()
+        val targetPath = outputDirectory.toPath().toAbsolutePath()
         zipInputStream.use { zis ->
             var entry = zis.nextEntry
             while (entry != null) {
-                val newPath = targetPath.resolve(entry.name).normalize()
+                val newPath = targetPath.resolve(entry.name).normalize().toAbsolutePath()
 
                 if (!newPath.startsWith(targetPath)) {
                     throw IOException("Bad zip entry: ${entry.name}")
