@@ -1,6 +1,6 @@
 package colosseum.utility.arcade
 
-enum class GameType {
+enum class GameType(val lobbyName: String) {
     /**
      * For unknown/unparsable GameType data, always use [None].
      */
@@ -80,18 +80,4 @@ enum class GameType {
      * Fire for land.
      */
     TurfWars("Turf Wars");
-
-    val gameName: String
-    val lobbyName: String
-
-    constructor(gameName: String) : this(gameName, gameName)
-
-    constructor(gameName: String, lobbyName: String) {
-        this.gameName = gameName
-        this.lobbyName = lobbyName
-    }
-
-    fun getName(): String {
-        return gameName
-    }
 }

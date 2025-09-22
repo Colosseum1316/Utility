@@ -53,8 +53,8 @@ tasks.named<Jar>("javadocJar") {
 }
 
 tasks.test {
+    systemProperty("mapdata.xsd", rootProject.projectDir.resolve("resources").resolve("mapdata.xsd").absolutePath)
     useJUnitPlatform()
-    outputs.upToDateWhen { false }
     reports {
         html.required = false
         junitXml.required = true
