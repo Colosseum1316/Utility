@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified" targetNamespace="https://github.com/Colosseum1316/Utility" xmlns="https://github.com/Colosseum1316/Utility">
+
+    <xs:element name="data">
+        <xs:complexType>
+            <xs:all>
+                <xs:element name="name" type="regularString" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="creator" type="regularString" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="game" type="gameEnum" minOccurs="1" maxOccurs="1"/>
+
+                <xs:element name="warps" minOccurs="0" maxOccurs="1">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="warp" type="warpType" minOccurs="0" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+
+                <xs:element name="admins" minOccurs="1" maxOccurs="1">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="admin" type="uuidType" minOccurs="0" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+
+                <xs:element name="live" type="xs:boolean" minOccurs="1" maxOccurs="1"/>
+            </xs:all>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:simpleType name="regularString">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[A-Za-z]+([A-Za-z0-9 ]*[A-Za-z0-9]+)*"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="gameEnum">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="None"/>
+            <xs:enumeration value="DragonEscape"/>
+            <xs:enumeration value="Gladiators"/>
+            <xs:enumeration value="HideAndSeek"/>
+            <xs:enumeration value="Bombers"/>
+            <xs:enumeration value="SurvivalGames"/>
+            <xs:enumeration value="MicroBattle"/>
+            <xs:enumeration value="MineStrike"/>
+            <xs:enumeration value="NanoGames"/>
+            <xs:enumeration value="Paintball"/>
+            <xs:enumeration value="OneInTheQuiver"/>
+            <xs:enumeration value="Runner"/>
+            <xs:enumeration value="SkyWars"/>
+            <xs:enumeration value="SnowFight"/>
+            <xs:enumeration value="Spleef"/>
+            <xs:enumeration value="TurfWars"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="uuidType">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="warpType">
+        <xs:sequence>
+            <xs:element name="x" type="xs:float"/>
+            <xs:element name="y" type="xs:float"/>
+            <xs:element name="z" type="xs:float"/>
+        </xs:sequence>
+        <xs:attribute name="name" type="regularString" use="required"/>
+    </xs:complexType>
+
+</xs:schema>
