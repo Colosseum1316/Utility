@@ -1,4 +1,8 @@
+import java.net.URL
+
 plugins {
+    java
+    `java-library`
     id("org.jetbrains.kotlin.jvm") version "2.1.20"
     id("org.jetbrains.dokka") version "1.8.10"
     `maven-publish`
@@ -8,15 +12,19 @@ plugins {
 group = "colosseum.minecraft"
 version = "0.1-SNAPSHOT"
 
+buildscript {
+    apply(from = "properties.gradle.kts")
+}
+
 java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
+    sourceCompatibility = JavaVersion.toVersion("${project.extra["compilation_java_version"]}")
+    targetCompatibility = JavaVersion.toVersion("${project.extra["compilation_java_version"]}")
     withSourcesJar()
     withJavadocJar()
 }
 
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain("${project.extra["compilation_java_version"]}".toInt())
 }
 
 repositories {
@@ -28,15 +36,17 @@ repositories {
         }
         filter {
             includeGroup("colosseum.minecraft")
-            includeGroup("net.md-5")
         }
     }
 }
 
 dependencies {
-    compileOnly("colosseum.minecraft:colosseumspigot-api:1.8.8-R0.1-SNAPSHOT")
-
-    testImplementation("colosseum.minecraft:colosseumspigot-api:1.8.8-R0.1-SNAPSHOT")
+    compileOnly("colosseum.minecraft:colosseumspigot-api:1.8.8-R0.1-SNAPSHOT") {
+        exclude("net.md-5", "bungeecord-chat")
+    }
+    testImplementation("colosseum.minecraft:colosseumspigot-api:1.8.8-R0.1-SNAPSHOT") {
+        exclude("net.md-5", "bungeecord-chat")
+    }
     testImplementation("org.junit.jupiter:junit-jupiter-api:${rootProject.findProperty("junit_version")}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${rootProject.findProperty("junit_version")}")
     testImplementation("com.github.MockBukkit:MockBukkit:v1.8-spigot-SNAPSHOT") {
@@ -48,7 +58,22 @@ tasks.jar {
     archiveClassifier.set("original")
 }
 
+tasks.dokkaJavadoc {
+    dokkaSourceSets {
+        configureEach {
+            jdkVersion.set("${project.extra["compilation_java_version"]}".toInt())
+            externalDocumentationLink {
+                url.set(URL("https://guava.dev/releases/17.0/api/docs/"))
+            }
+            externalDocumentationLink {
+                url.set(URL("https://helpch.at/docs/1.8.8/"))
+            }
+        }
+    }
+}
+
 tasks.named<Jar>("javadocJar") {
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
     from(tasks.named("dokkaJavadoc"))
 }
 
