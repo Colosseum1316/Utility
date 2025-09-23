@@ -4,11 +4,36 @@ on:
     branches:
       - "master"
     paths:
-      - "src/**/*.kt"
+      - "src/main/java/**/*.java"
+      - "src/main/kotlin/**/*.kt"
+      - "src/test/java/**/*.java"
+      - "src/test/kotlin/**/*.kt"
+      - "src/test/resources/"
       - "build.gradle.kts"
       - "settings.gradle.kts"
+      - "properties.gradle.kts"
       - "gradle.properties"
-      - "resources/mapdata.xsd"
+      - "resources/*"
+      - "!resources/*.sha256"
+      - "!.gitignore"
+      - "!README.md"
+      - "!README"
+      - "!LICENSE"
+  pull_request:
+    branches:
+      - "master"
+    paths:
+      - "src/main/java/**/*.java"
+      - "src/main/kotlin/**/*.kt"
+      - "src/test/java/**/*.java"
+      - "src/test/kotlin/**/*.kt"
+      - "src/test/resources/"
+      - "build.gradle.kts"
+      - "settings.gradle.kts"
+      - "properties.gradle.kts"
+      - "gradle.properties"
+      - "resources/*"
+      - "!resources/*.sha256"
       - "!.gitignore"
       - "!README.md"
       - "!README"
@@ -76,7 +101,7 @@ jobs:
 
       - name: Publish package
         run: ./gradlew publish
-        if: ${{ ((github.ref_name == 'master' && github.event_name == 'push') || github.event_name == 'workflow_dispatch') && matrix.os == 'ubuntu-latest' }}
+        if: ${{ (github.ref_name == 'master' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')) && matrix.os == 'ubuntu-latest' }}
         env:
           COLOSSEUM_MAVEN_URL: ${{ secrets.COLOSSEUM_MAVEN }}
           COLOSSEUM_MAVEN_USERNAME: ${{ secrets.COLOSSEUM_MAVEN_USERNAME }}
