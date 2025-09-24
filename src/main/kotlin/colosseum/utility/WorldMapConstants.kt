@@ -11,6 +11,8 @@ object WorldMapConstants {
     const val LEVEL_DAT: String = "level.dat"
     const val REGION: String = "region"
     const val WORLDCONFIG_DAT: String = "WorldConfig.dat"
+    const val WORLDCONFIG_XML: String = "WorldConfig.xml"
     const val MAP_DAT: String = "Map.dat"
+    const val MAP_XML: String = "Map.xml"
     const val UID_DAT: String = "uid.dat"
 }

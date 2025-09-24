@@ -4,7 +4,7 @@ import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 
 object UtilGear {
-    val scytheSet: HashSet<Material> = HashSet()
+    private val scytheSet = HashSet<Material>()
     private val axeSet = HashSet<Material>()
     private val swordSet = HashSet<Material>()
     private val maulSet = HashSet<Material>()

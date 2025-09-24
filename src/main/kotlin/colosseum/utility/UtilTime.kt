@@ -1,11 +1,15 @@
 package colosseum.utility
 
+import kotlin.math.max
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.function.*
 
+@Suppress("MemberVisibilityCanBePrivate")
 object UtilTime {
     private val DATE_FORMAT_NOW = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss")
     private val DATE_FORMAT_DAY = DateTimeFormatter.ofPattern("MM-dd-yyyy")
@@ -86,11 +90,11 @@ object UtilTime {
     fun convert(time: Long, trim: Int, timeUnit: TimeUnit): Double {
         val type = convert0(time, timeUnit)
         return when (type) {
-            TimeUnit.DAYS -> UtilMath.trim(trim, time / 86400000.0)
-            TimeUnit.HOURS -> UtilMath.trim(trim, time / 3600000.0)
-            TimeUnit.MINUTES -> UtilMath.trim(trim, time / 60000.0)
-            TimeUnit.SECONDS -> UtilMath.trim(trim, time / 1000.0)
-            else -> UtilMath.trim(trim, time.toDouble())
+            TimeUnit.DAYS -> doTrim(trim, time / 86400000.0)
+            TimeUnit.HOURS -> doTrim(trim, time / 3600000.0)
+            TimeUnit.MINUTES -> doTrim(trim, time / 60000.0)
+            TimeUnit.SECONDS -> doTrim(trim, time / 1000.0)
+            else -> doTrim(trim, time.toDouble())
         }
     }
 
@@ -158,19 +162,19 @@ object UtilTime {
         var num: Double
         if (trim == 0) {
             text = when (type) {
-                TimeUnit.DAYS -> "${UtilMath.trim(trim, time / 86400000.0).also { num = it }} day"
-                TimeUnit.HOURS -> "${UtilMath.trim(trim, time / 3600000.0).also { num = it }} hour"
-                TimeUnit.MINUTES -> "${UtilMath.trim(trim, time / 60000.0).toInt().also { num = it.toDouble() }.toInt()} minute"
-                TimeUnit.SECONDS -> "${UtilMath.trim(trim, time / 1000.0).toInt().also { num = it.toDouble() }.toInt()} second"
-                else -> "${UtilMath.trim(0, time.toDouble()).toInt().also { num = it.toDouble() }.toInt()} millisecond"
+                TimeUnit.DAYS -> "${doTrim(trim, time / 86400000.0).also { num = it }} day"
+                TimeUnit.HOURS -> "${doTrim(trim, time / 3600000.0).also { num = it }} hour"
+                TimeUnit.MINUTES -> "${doTrim(trim, time / 60000.0).toInt().also { num = it.toDouble() }.toInt()} minute"
+                TimeUnit.SECONDS -> "${doTrim(trim, time / 1000.0).toInt().also { num = it.toDouble() }.toInt()} second"
+                else -> "${doTrim(0, time.toDouble()).toInt().also { num = it.toDouble() }.toInt()} millisecond"
             }
         } else {
             text = when (type) {
-                TimeUnit.DAYS -> "${UtilMath.trim(trim, time / 86400000.0).also { num = it }} day"
-                TimeUnit.HOURS -> "${UtilMath.trim(trim, time / 3600000.0).also { num = it }} hour"
-                TimeUnit.MINUTES -> "${UtilMath.trim(trim, time / 60000.0).also { num = it }} minute"
-                TimeUnit.SECONDS -> "${UtilMath.trim(trim, time / 1000.0).also { num = it }} second"
-                else -> "${UtilMath.trim(0, time.toDouble()).toInt().also { num = it.toDouble() }.toInt()} millisecond"
+                TimeUnit.DAYS -> "${doTrim(trim, time / 86400000.0).also { num = it }} day"
+                TimeUnit.HOURS -> "${doTrim(trim, time / 3600000.0).also { num = it }} hour"
+                TimeUnit.MINUTES -> "${doTrim(trim, time / 60000.0).also { num = it }} minute"
+                TimeUnit.SECONDS -> "${doTrim(trim, time / 1000.0).also { num = it }} second"
+                else -> "${doTrim(0, time.toDouble()).toInt().also { num = it.toDouble() }.toInt()} millisecond"
             }
         }
 
@@ -183,6 +187,13 @@ object UtilTime {
     @JvmStatic
     fun elapsed(from: Long, required: Long): Boolean {
         return System.currentTimeMillis() - from > required
+    }
+    
+    @JvmStatic
+    fun doTrim(degree: Int, d: Double): Double {
+        val symb = DecimalFormatSymbols()
+        val twoDForm = DecimalFormat("#.#${"#".repeat(max(0.0, (degree - 1).toDouble()).toInt())}", symb)
+        return twoDForm.format(d).toDouble()
     }
 
     enum class TimeUnit(val milliseconds: Long) {

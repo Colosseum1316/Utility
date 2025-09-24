@@ -16,6 +16,7 @@ import java.util.*
  * @see nextInts
  * @see nextInt
  */
+@Suppress("MemberVisibilityCanBePrivate")
 class RangeShuffleIterator(start: Int, end: Int) : PrimitiveIterator.OfInt {
     private val remaining: IntSet
     private var remainingCount: Int
@@ -36,7 +37,7 @@ class RangeShuffleIterator(start: Int, end: Int) : PrimitiveIterator.OfInt {
      */
     fun nextInts(maxAmount: Int): IntArray {
         val ret = IntArray(
-            min(remainingCount.toDouble(), maxAmount.toDouble()).toInt()
+            min(remainingCount, maxAmount)
         )
         for (i in ret.indices) {
             ret[i] = nextInt()
@@ -121,7 +122,7 @@ class RangeShuffleIterator(start: Int, end: Int) : PrimitiveIterator.OfInt {
             if (upper > value) {
                 reinsert(value + 1, upper)
             }
-            reinsert(lower, min(upper, (value - 1)))
+            reinsert(lower, min(upper, value - 1))
         }
 
         private fun reinsert(start: Int, end: Int) {
