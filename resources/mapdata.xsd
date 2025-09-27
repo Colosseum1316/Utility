@@ -1,14 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified" targetNamespace="https://github.com/Colosseum1316/Utility" xmlns="https://github.com/Colosseum1316/Utility">
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified"
+           targetNamespace="https://github.com/Colosseum1316/Utility" xmlns="https://github.com/Colosseum1316/Utility">
 
-    <xs:element name="data">
+    <xs:element name="mapData">
         <xs:complexType>
             <xs:all>
                 <xs:element name="name" type="regularString" minOccurs="1" maxOccurs="1"/>
                 <xs:element name="creator" type="regularString" minOccurs="1" maxOccurs="1"/>
-                <xs:element name="game" type="gameEnum" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="gameType" type="gameTypeEnum" minOccurs="1" maxOccurs="1"/>
 
-                <xs:element name="warps" minOccurs="0" maxOccurs="1">
+                <xs:element name="warps" minOccurs="1" maxOccurs="1">
                     <xs:complexType>
                         <xs:sequence>
                             <xs:element name="warp" type="warpType" minOccurs="0" maxOccurs="unbounded"/>
@@ -31,11 +32,17 @@
 
     <xs:simpleType name="regularString">
         <xs:restriction base="xs:string">
-            <xs:pattern value="[A-Za-z]+([A-Za-z0-9 ]*[A-Za-z0-9]+)*"/>
+            <xs:pattern value="[A-Za-z]([A-Za-z0-9]|[ _-][A-Za-z0-9])+"/>
         </xs:restriction>
     </xs:simpleType>
 
-    <xs:simpleType name="gameEnum">
+    <xs:simpleType name="strictString">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[A-Za-z][A-Za-z0-9]+"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="gameTypeEnum">
         <xs:restriction base="xs:string">
             <xs:enumeration value="None"/>
             <xs:enumeration value="DragonEscape"/>
@@ -64,11 +71,11 @@
 
     <xs:complexType name="warpType">
         <xs:sequence>
-            <xs:element name="x" type="xs:float"/>
-            <xs:element name="y" type="xs:float"/>
-            <xs:element name="z" type="xs:float"/>
+            <xs:element name="x" type="xs:float" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="y" type="xs:float" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="z" type="xs:float" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
-        <xs:attribute name="name" type="regularString" use="required"/>
+        <xs:attribute name="name" type="strictString" use="required"/>
     </xs:complexType>
 
 </xs:schema>
