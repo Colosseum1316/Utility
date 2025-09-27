@@ -32,7 +32,7 @@
 
     <xs:simpleType name="regularString">
         <xs:restriction base="xs:string">
-            <xs:pattern value="[A-Za-z](?:[A-Za-z0-9]|[_\- ][A-Za-z0-9])+"/>
+            <xs:pattern value="[A-Za-z]([A-Za-z0-9]|[ _-][A-Za-z0-9])+"/>
         </xs:restriction>
     </xs:simpleType>
 
