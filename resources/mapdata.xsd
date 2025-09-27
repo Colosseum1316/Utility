@@ -36,6 +36,12 @@
         </xs:restriction>
     </xs:simpleType>
 
+    <xs:simpleType name="strictString">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[A-Za-z][A-Za-z0-9]+"/>
+        </xs:restriction>
+    </xs:simpleType>
+
     <xs:simpleType name="gameTypeEnum">
         <xs:restriction base="xs:string">
             <xs:enumeration value="None"/>
@@ -69,7 +75,7 @@
             <xs:element name="y" type="xs:float" minOccurs="1" maxOccurs="1"/>
             <xs:element name="z" type="xs:float" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
-        <xs:attribute name="name" type="regularString" use="required"/>
+        <xs:attribute name="name" type="strictString" use="required"/>
     </xs:complexType>
 
 </xs:schema>
