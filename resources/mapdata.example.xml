@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapData xmlns="https://github.com/Colosseum1316/Utility"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="https://github.com/Colosseum1316/Utility mapdata.xsd">
+    <name>Map Name 1-1</name>
+    <creator>Builder Team 1_1</creator>
+    <gameType>None</gameType>
+    <warps>
+        <warp name="example1">
+            <x>1.0</x>
+            <y>2.1</y>
+            <z>3.2</z>
+        </warp>
+        <warp name="example2">
+            <x>4.3</x>
+            <y>5.4</y>
+            <z>6.5</z>
+        </warp>
+    </warps>
+    <admins>
+        <!-- It's just a random UUID. -->
+        <admin>5da001d1-f9a4-4c95-9736-9a98327848bf</admin>
+    </admins>
+    <live>true</live>
+</mapData>

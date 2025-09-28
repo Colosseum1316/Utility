@@ -54,7 +54,7 @@ class TestGameType {
             }
         });
 
-        String expression = "//xs:simpleType[@name='gameEnum']//xs:enumeration/@value";
+        String expression = "//xs:simpleType[@name='gameTypeEnum']//xs:enumeration/@value";
         NodeList enumNodes = (NodeList) xpath.evaluate(expression, document, XPathConstants.NODESET);
         Assertions.assertEquals(GameType.getEntries().size(), enumNodes.getLength());
         Set<GameType> pending = GameType.getEntries().stream().collect(Collectors.toSet());

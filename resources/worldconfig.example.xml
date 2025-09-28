@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<worldConfig xmlns="https://github.com/Colosseum1316/Utility"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="https://github.com/Colosseum1316/Utility worldconfig.xsd">
+    <name>Heros Valley</name>
+    <creator>Heros Valley</creator>
+    <corners>
+        <corner>
+            <x>67</x>
+            <y>76</y>
+            <z>123</z>
+        </corner>
+        <corner>
+            <x>-65</x>
+            <y>19</y>
+            <z>-121</z>
+        </corner>
+    </corners>
+    <teams>
+        <team name="Red">
+            <spawns>
+                <spawn>
+                    <x>-11</x>
+                    <y>32</y>
+                    <z>90</z>
+                </spawn>
+                <spawn>
+                    <x>-9</x>
+                    <y>32</y>
+                    <z>90</z>
+                </spawn>
+                <spawn>
+                    <x>-7</x>
+                    <y>32</y>
+                    <z>90</z>
+                </spawn>
+                <spawn>
+                    <x>-5</x>
+                    <y>32</y>
+                    <z>90</z>
+                </spawn>
+            </spawns>
+        </team>
+        <team name="Blue">
+            <spawns>
+                <spawn>
+                    <x>5</x>
+                    <y>32</y>
+                    <z>-91</z>
+                </spawn>
+                <spawn>
+                    <x>7</x>
+                    <y>32</y>
+                    <z>-91</z>
+                </spawn>
+                <spawn>
+                    <x>9</x>
+                    <y>32</y>
+                    <z>-91</z>
+                </spawn>
+                <spawn>
+                    <x>11</x>
+                    <y>32</y>
+                    <z>-91</z>
+                </spawn>
+            </spawns>
+        </team>
+    </teams>
+    <dataPoints>
+        <data name="RED">
+            <locations>
+                <location>
+                    <x>-8</x>
+                    <y>32</y>
+                    <z>77</z>
+                </location>
+            </locations>
+        </data>
+        <data name="GRAY">
+            <locations>
+                <location>
+                    <x>-9</x>
+                    <y>26</y>
+                    <z>7</z>
+                </location>
+                <location>
+                    <x>-8</x>
+                    <y>26</y>
+                    <z>8</z>
+                </location>
+            </locations>
+        </data>
+    </dataPoints>
+    <customPoints>
+        <custom name="KIT RED ASSASSIN">
+            <locations>
+                <location>
+                    <x>-13</x>
+                    <y>32</y>
+                    <z>85</z>
+                </location>
+            </locations>
+        </custom>
+    </customPoints>
+</worldConfig>
