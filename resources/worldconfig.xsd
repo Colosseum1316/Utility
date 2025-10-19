@@ -1,0 +1,109 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema" elementFormDefault="qualified" attributeFormDefault="unqualified"
+           targetNamespace="https://github.com/Colosseum1316/Utility" xmlns="https://github.com/Colosseum1316/Utility"
+           xmlns:colosseum_worldconfig="https://github.com/Colosseum1316/Utility"
+           xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning" vc:minVersion="1.1">
+
+    <xs:element name="worldConfig">
+        <xs:complexType>
+            <xs:all>
+                <xs:element name="name" type="regularString" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="creator" type="regularString" minOccurs="1" maxOccurs="1"/>
+                <xs:element name="corners" minOccurs="1" maxOccurs="1">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="corner" type="locationType" minOccurs="2" maxOccurs="2"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="teams" minOccurs="1" maxOccurs="1">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="team" minOccurs="1" maxOccurs="15">
+                                <xs:complexType>
+                                    <xs:sequence>
+                                        <xs:element name="spawns" minOccurs="1" maxOccurs="1">
+                                            <xs:complexType>
+                                                <xs:sequence>
+                                                    <xs:element name="spawn" type="locationType" minOccurs="1" maxOccurs="unbounded"/>
+                                                </xs:sequence>
+                                            </xs:complexType>
+                                        </xs:element>
+                                    </xs:sequence>
+                                    <xs:attribute name="name" type="teamName" use="required"/>
+                                </xs:complexType>
+                            </xs:element>
+                        </xs:sequence>
+                    </xs:complexType>
+                    <!-- https://support.liquid-technologies.com/kb/a79/creating-a-unique-constraint-with-an-xsd.aspx -->
+                    <xs:unique name="uniqueTeamName">
+                        <xs:selector xpath="colosseum_worldconfig:team"/>
+                        <xs:field xpath="@name"/>
+                    </xs:unique>
+                </xs:element>
+                <xs:element name="dataPoints" minOccurs="1" maxOccurs="1">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="data" type="pointType" minOccurs="0" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+                <xs:element name="customPoints" minOccurs="0" maxOccurs="1">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="custom" type="pointType" minOccurs="0" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:all>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:simpleType name="regularString">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[A-Za-z]([A-Za-z0-9]|[ _-][A-Za-z0-9])+"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="teamName">
+        <xs:restriction base="xs:string">
+            <xs:enumeration value="Orange"/>
+            <xs:enumeration value="Magenta"/>
+            <xs:enumeration value="Sky"/>
+            <xs:enumeration value="Yellow"/>
+            <xs:enumeration value="Lime"/>
+            <xs:enumeration value="Pink"/>
+            <xs:enumeration value="Gray"/>
+            <xs:enumeration value="LGray"/>
+            <xs:enumeration value="Cyan"/>
+            <xs:enumeration value="Purple"/>
+            <xs:enumeration value="Blue"/>
+            <xs:enumeration value="Brown"/>
+            <xs:enumeration value="Green"/>
+            <xs:enumeration value="Red"/>
+            <xs:enumeration value="Black"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:complexType name="locationType">
+        <xs:sequence>
+            <xs:element name="x" type="xs:integer" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="y" type="xs:integer" minOccurs="1" maxOccurs="1"/>
+            <xs:element name="z" type="xs:integer" minOccurs="1" maxOccurs="1"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="pointType">
+        <xs:sequence>
+            <xs:element name="locations" minOccurs="1" maxOccurs="1">
+                <xs:complexType>
+                    <xs:sequence>
+                        <xs:element name="location" type="locationType" minOccurs="1" maxOccurs="unbounded"/>
+                    </xs:sequence>
+                </xs:complexType>
+            </xs:element>
+        </xs:sequence>
+        <xs:attribute name="name" type="regularString" use="required"/>
+    </xs:complexType>
+
+</xs:schema>

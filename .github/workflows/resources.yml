@@ -1,0 +1,41 @@
+name: Resources checksum
+on:
+  push:
+    branches:
+      - "master"
+    paths:
+      - "resources/*"
+      - "!resources/*.sha256"
+  pull_request:
+    branches:
+      - "master"
+    paths:
+      - "resources/*"
+      - "!resources/*.sha256"
+  workflow_dispatch:
+
+jobs:
+  checksum:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref || github.ref }}
+          fetch-depth: 0
+
+      - name: XSD files checksum
+        uses: Solratic/checksum-action@v1
+        with:
+          pattern: "resources/*.xsd"
+          suffix: "sha256"
+
+      - name: Commit checksum files
+        uses: EndBug/add-and-commit@v9
+        with:
+          default_author: github_actions
+          add: "resources/*.sha256"
+          message: "[skip actions] Checksum"
