@@ -28,17 +28,7 @@ kotlin {
 }
 
 repositories {
-    mavenCentral()
-    exclusiveContent {
-        forRepository {
-            maven("https://coffeewarehouse.harborbucket.top/snapshots")
-        }
-        filter {
-            includeGroup("colosseum.minecraft")
-            includeGroup("net.md-5")
-            includeGroup("com.github.MockBukkit")
-        }
-    }
+    maven("https://coffeewarehouse.harborbucket.top/snapshots")
 }
 
 dependencies {
@@ -50,10 +40,6 @@ dependencies {
     testImplementation("com.github.MockBukkit:MockBukkit:v1.8-spigot-SNAPSHOT") {
         exclude("org.spigotmc")
     }
-}
-
-tasks.jar {
-    archiveClassifier.set("original")
 }
 
 tasks.dokkaJavadoc {
