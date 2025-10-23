@@ -42,20 +42,6 @@ dependencies {
     }
 }
 
-tasks.dokkaJavadoc {
-    dokkaSourceSets {
-        configureEach {
-            jdkVersion.set("${project.extra["compilation_java_version"]}".toInt())
-            externalDocumentationLink {
-                url.set(URL("https://guava.dev/releases/17.0/api/docs/"))
-            }
-            externalDocumentationLink {
-                url.set(URL("https://helpch.at/docs/1.8.8/"))
-            }
-        }
-    }
-}
-
 tasks.named<Jar>("javadocJar") {
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
     from(tasks.named("dokkaJavadoc"))
