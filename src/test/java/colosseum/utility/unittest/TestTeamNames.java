@@ -54,5 +54,8 @@ class TestTeamNames {
         Assertions.assertEquals(TeamNames.Green, TeamNames.getByDyeColor(DyeColor.GREEN.name()));
         Assertions.assertEquals(TeamNames.Red, TeamNames.getByDyeColor(DyeColor.RED.name()));
         Assertions.assertEquals(TeamNames.Black, TeamNames.getByDyeColor(DyeColor.BLACK.name()));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> {
+            TeamNames.getByDyeColor("None");
+        });
     }
 }
