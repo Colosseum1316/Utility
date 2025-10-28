@@ -1,5 +1,6 @@
 package colosseum.utility
 
+@Suppress("unused")
 object WorldMapConstants {
     const val MAP: String = "map"
     const val PARSE: String = "parse"

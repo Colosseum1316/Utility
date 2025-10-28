@@ -3,6 +3,7 @@ package colosseum.utility
 import org.bukkit.Material
 import org.bukkit.inventory.ItemStack
 
+@Suppress("deprecation", "unused")
 object UtilGear {
     private val scytheSet = HashSet<Material>()
     private val axeSet = HashSet<Material>()
