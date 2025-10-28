@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 class TestUtilBlockBase {
     private static ServerMock server;
@@ -115,7 +116,7 @@ class TestUtilBlockBase {
         Assertions.assertEquals(Material.IRON_ORE, startPoint.getType());
         List<Block> foundBlocks = UtilBlockBase.getSurrounding(startPoint, false);
         Assertions.assertEquals(6, foundBlocks.size());
-        List<Material> materials = foundBlocks.stream().map(Block::getType).toList();
+        List<Material> materials = foundBlocks.stream().map(Block::getType).collect(Collectors.toList());
         Assertions.assertTrue(materials.contains(Material.GOLD_ORE));
         Assertions.assertTrue(materials.contains(Material.COAL_ORE));
         Assertions.assertTrue(materials.contains(Material.EMERALD_BLOCK));
@@ -137,7 +138,7 @@ class TestUtilBlockBase {
         Assertions.assertEquals(Material.IRON_ORE, startPoint.getType());
         List<Block> foundBlocks = UtilBlockBase.getSurrounding(startPoint, true);
         Assertions.assertEquals(26, foundBlocks.size());
-        List<Material> materials = foundBlocks.stream().map(Block::getType).toList();
+        List<Material> materials = foundBlocks.stream().map(Block::getType).collect(Collectors.toList());
         Assertions.assertTrue(materials.contains(Material.STONE));
         Assertions.assertTrue(materials.contains(Material.DIAMOND_BLOCK));
         Assertions.assertTrue(materials.contains(Material.GOLD_BLOCK));

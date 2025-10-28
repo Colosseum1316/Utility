@@ -13,6 +13,7 @@ import org.bukkit.block.BlockFace
 import org.bukkit.util.Vector
 import java.util.function.Function
 
+@Suppress("deprecation", "unused")
 object UtilWorld {
     /**
      * Reminder: Use relative path!
@@ -92,7 +93,6 @@ object UtilWorld {
             World.Environment.NORMAL -> "Overworld"
             World.Environment.NETHER -> "Nether"
             World.Environment.THE_END -> "The End"
-            else -> "Unknown"
         }
     }
 

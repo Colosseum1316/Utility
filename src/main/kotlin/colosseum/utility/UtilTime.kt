@@ -10,7 +10,7 @@ import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.util.function.*
 
-@Suppress("MemberVisibilityCanBePrivate")
+@Suppress("MemberVisibilityCanBePrivate", "unused")
 object UtilTime {
     private val DATE_FORMAT_NOW = DateTimeFormatter.ofPattern("MM-dd-yyyy HH:mm:ss")
     private val DATE_FORMAT_DAY = DateTimeFormatter.ofPattern("MM-dd-yyyy")

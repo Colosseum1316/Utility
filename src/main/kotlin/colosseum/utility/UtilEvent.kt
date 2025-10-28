@@ -8,6 +8,7 @@ import org.bukkit.event.entity.EntityDamageByEntityEvent
 import org.bukkit.event.entity.EntityDamageEvent
 import org.bukkit.event.player.PlayerInteractEvent
 
+@Suppress("deprecation", "unused")
 object UtilEvent {
     @JvmStatic
     fun isAction(event: PlayerInteractEvent, actionType: ActionType): Boolean {
