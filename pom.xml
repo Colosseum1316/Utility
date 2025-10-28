@@ -167,10 +167,20 @@
                     <skipDeprecated>false</skipDeprecated>
                     <skipEmptyPackages>true</skipEmptyPackages>
                     <reportUndocumented>false</reportUndocumented>
+                    <noStdlibLink>false</noStdlibLink>
+                    <noJdkLink>false</noJdkLink>
                     <sourceDirectories>
                         <dir>src/main/java</dir>
                         <dir>src/main/kotlin</dir>
                     </sourceDirectories>
+                    <externalDocumentationLinks>
+                        <link>
+                            <url>https://guava.dev/releases/17.0/api/docs/</url>
+                        </link>
+                        <link>
+                            <url>https://helpch.at/docs/1.8.8/</url>
+                        </link>
+                    </externalDocumentationLinks>
                 </configuration>
             </plugin>
             <plugin>
