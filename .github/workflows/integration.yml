@@ -86,7 +86,7 @@ jobs:
           csv-file: target/jacoco-report/jacoco.csv
 
       - name: Publish package
-        run: mvn -B -V -e -ntp -Dstyle.color=always deploy
+        run: ./_publish.sh
         if: ${{ (github.ref_name == 'master' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')) && matrix.os == 'ubuntu-latest' }}
         env:
           COLOSSEUM_MAVEN_URL: ${{ secrets.COLOSSEUM_MAVEN }}
