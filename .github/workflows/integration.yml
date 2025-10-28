@@ -62,7 +62,7 @@ jobs:
         uses: actions/setup-java@v4
         with:
           java-version: 8
-          distribution: temurin
+          distribution: corretto
           cache: "maven"
 
       - name: Build
@@ -77,7 +77,7 @@ jobs:
           detailed_summary: true
           fail_on_failure: true
           require_tests: true
-          check_name: Test Report (${{ matrix.os }}) (Java ${{ matrix.java-version }})
+          check_name: Test Report (${{ matrix.os }})
           check_title_template: '{{SUITE_NAME}} | {{TEST_NAME}}'
 
       - name: JaCoCo Code Coverage Report

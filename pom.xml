@@ -116,7 +116,6 @@
                 <configuration>
                     <source>${maven.compiler.source}</source>
                     <target>${maven.compiler.target}</target>
-                    <proc>full</proc>
                 </configuration>
                 <executions>
                     <execution>

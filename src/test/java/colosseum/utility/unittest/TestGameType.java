@@ -16,6 +16,7 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathFactory;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -75,11 +76,11 @@ class TestGameType {
             gameTypeInfo.addInfo("1");
             gameTypeInfo.addInfo("2");
             gameTypeInfo.addInfo("3");
-            Assertions.assertLinesMatch(List.of("1", "2", "3"), info);
+            Assertions.assertLinesMatch(Arrays.asList("1", "2", "3"), info);
             gameTypeInfo.removeInfo(0);
-            Assertions.assertLinesMatch(List.of("2", "3"), info);
+            Assertions.assertLinesMatch(Arrays.asList("2", "3"), info);
             gameTypeInfo.removeInfo(1);
-            Assertions.assertLinesMatch(List.of("2"), info);
+            Assertions.assertLinesMatch(Arrays.asList("2"), info);
         });
     }
 }
