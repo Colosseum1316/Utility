@@ -8,10 +8,7 @@ on:
       - "src/main/kotlin/**/*.kt"
       - "src/test/java/**/*.java"
       - "src/test/kotlin/**/*.kt"
-      - "build.gradle.kts"
-      - "settings.gradle.kts"
-      - "properties.gradle.kts"
-      - "gradle.properties"
+      - "pom.xml"
       - "resources/*"
       - "!resources/*.sha256"
       - "!.gitignore"
@@ -26,10 +23,7 @@ on:
       - "src/main/kotlin/**/*.kt"
       - "src/test/java/**/*.java"
       - "src/test/kotlin/**/*.kt"
-      - "build.gradle.kts"
-      - "settings.gradle.kts"
-      - "properties.gradle.kts"
-      - "gradle.properties"
+      - "pom.xml"
       - "resources/*"
       - "!resources/*.sha256"
       - "!.gitignore"
@@ -67,14 +61,11 @@ jobs:
       - name: Setup Java
         uses: actions/setup-java@v4
         with:
-          java-version: 17
+          java-version: 8
           distribution: temurin
 
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
-
       - name: Build
-        run: ./gradlew build
+        run: mvn -B -V -e -ntp -Dstyle.color=always clean package
 
       - name: Write test report
         uses: mikepenz/action-junit-report@v5
@@ -98,7 +89,7 @@ jobs:
           publish_only_summary: true
 
       - name: Publish package
-        run: ./gradlew publish
+        run: mvn -B -V -e -ntp -Dstyle.color=always deploy
         if: ${{ (github.ref_name == 'master' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')) && matrix.os == 'ubuntu-latest' }}
         env:
           COLOSSEUM_MAVEN_URL: ${{ secrets.COLOSSEUM_MAVEN }}
