@@ -66,28 +66,24 @@ jobs:
           cache: "maven"
 
       - name: Build
-        run: mvn -B -V -e -ntp -Dstyle.color=always clean package
+        run: mvn -B -V -e -ntp -Dstyle.color=always clean verify
 
       - name: Write test report
         uses: mikepenz/action-junit-report@v5
         if: ${{ success() || failure() }}
         with:
-          report_paths: './build/test-results/test/TEST-*.xml'
+          report_paths: ./target/surefire-reports/TEST-*.xml
           include_passed: true
           detailed_summary: true
           fail_on_failure: true
           require_tests: true
-          check_name: Test Report on ${{ matrix.os }} (Ref ${{ github.ref }})
+          check_name: Test Report (${{ matrix.os }}) (Java ${{ matrix.java-version }})
           check_title_template: '{{SUITE_NAME}} | {{TEST_NAME}}'
 
       - name: JaCoCo Code Coverage Report
-        uses: PavanMudigonda/jacoco-reporter@v5.0
+        uses: NorthRealm/jacoco-csv-summary@v1.0.0
         with:
-          coverage_results_path: build/reports/jacoco/test/jacocoTestReport.xml
-          coverage_report_name: Coverage (${{ matrix.os }})
-          coverage_report_title: JaCoCo (${{ matrix.os }})
-          fail_below_threshold: false
-          publish_only_summary: true
+          csv-file: target/jacoco-report/jacoco.csv
 
       - name: Publish package
         run: mvn -B -V -e -ntp -Dstyle.color=always deploy

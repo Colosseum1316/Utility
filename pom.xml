@@ -164,6 +164,7 @@
                             <version>2.1.0</version>
                         </plugin>
                     </dokkaPlugins>
+                    <languageVersion>${kotlin.version}</languageVersion>
                     <skipDeprecated>false</skipDeprecated>
                     <skipEmptyPackages>true</skipEmptyPackages>
                     <reportUndocumented>false</reportUndocumented>
@@ -238,7 +239,7 @@
                     </execution>
                     <execution>
                         <id>report</id>
-                        <phase>verify</phase>
+                        <phase>package</phase>
                         <goals>
                             <goal>report</goal>
                         </goals>
