@@ -63,6 +63,7 @@ jobs:
         with:
           java-version: 8
           distribution: temurin
+          cache: "maven"
 
       - name: Build
         run: mvn -B -V -e -ntp -Dstyle.color=always clean package
